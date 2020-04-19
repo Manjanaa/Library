@@ -12,6 +12,13 @@ namespace Library
         // This line creates the Panels List.
         private readonly List<Panel> listPanel = new List<Panel>();
 
+        // This method checks which ListPanel is actually in Front.
+        // We need this to tell Save Button in the menu what to save.
+        private bool IsControlAtFront(Control control)
+        {
+            return control.Parent.Controls.GetChildIndex(control) == 0;
+        }
+
         // This is the Constuctor for the Form.
         public FrmLibrary()
         {
@@ -35,6 +42,9 @@ namespace Library
             listPanel.Add(panelPublishers);
 
             // Bring the firest Panel to front; it's containing the data of the "DataGridViewBooks".
+            listPanel[2].Hide();
+            listPanel[1].Hide();
+            listPanel[0].Show();
             listPanel[0].BringToFront();
 
         }
@@ -46,6 +56,9 @@ namespace Library
         private void btnBooks_Click(object sender, EventArgs e)
         {
             // Brings the Panel containing the "DataGridViewBooks" to the front.
+            listPanel[2].Hide();
+            listPanel[1].Hide();
+            listPanel[0].Show();
             listPanel[0].BringToFront();
 
         }
@@ -53,6 +66,9 @@ namespace Library
         private void btnAuthors_Click(object sender, EventArgs e)
         {
             // Brings the Panel containing the "DataGridViewAuthors" to the front.
+            listPanel[2].Hide();
+            listPanel[0].Hide();
+            listPanel[1].Show();
             listPanel[1].BringToFront();
 
         }
@@ -60,6 +76,9 @@ namespace Library
         private void btnPublishers_Click(object sender, EventArgs e)
         {
             // Brings the Panel containing the "DataGridViewPublishers" to the front.
+            listPanel[1].Hide();
+            listPanel[0].Hide();
+            listPanel[2].Show();
             listPanel[2].BringToFront();
 
         }
@@ -78,6 +97,9 @@ namespace Library
         private void toolStripMenuItemFileOpenBooks_Click(object sender, EventArgs e)
         {
             // Brings the Panel containing the "DataGridViewBooks" to the front.
+            listPanel[2].Hide();
+            listPanel[1].Hide();
+            listPanel[0].Show();
             listPanel[0].BringToFront();
 
         }
@@ -85,6 +107,9 @@ namespace Library
         private void toolStripMenuItemFileOpenAuthors_Click(object sender, EventArgs e)
         {
             // Brings the Panel containing the "DataGridViewAuthors" to the front.
+            listPanel[2].Hide();
+            listPanel[0].Hide();
+            listPanel[1].Show();
             listPanel[1].BringToFront();
 
         }
@@ -92,14 +117,41 @@ namespace Library
         private void toolStripMenuItemFileOpenPublishers_Click(object sender, EventArgs e)
         {
             // Brings the Panel containing the "DataGridViewPublishers" to the front.
+            listPanel[1].Hide();
+            listPanel[0].Hide();
+            listPanel[2].Show();
             listPanel[2].BringToFront();
 
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // TODO: Methode "Speichern" implementieren!
-
+            // Check which listPanel is actually in front and save it.
+            if (IsControlAtFront(listPanel[0]))
+            {
+                // Save Table "Books".
+                this.Validate();
+                this.booksBindingSource.EndEdit();
+                this.tableAdapterManager.UpdateAll(this.libraryDataSet);
+            }
+            else if (IsControlAtFront(listPanel[1]))
+            {
+                // Save Table "Authors".
+                this.Validate();
+                this.authorsBindingSource.EndEdit();
+                this.tableAdapterManager.UpdateAll(this.libraryDataSet);
+            }
+            else if (IsControlAtFront(listPanel[2]))
+            {
+                // Save Table "Publishers".
+                this.Validate();
+                this.publishersBindingSource.EndEdit();
+                this.tableAdapterManager.UpdateAll(this.libraryDataSet);
+            }
+            else
+            {
+                MessageBox.Show("Can not save to database, because there is no DataGrid View select!");
+            }
         }
 
         private void toolStripMenuItemFilePrint_Click(object sender, EventArgs e)
@@ -163,8 +215,10 @@ namespace Library
         // BLOCK: BINDING NAVIGATORS - START
         private void bindingNavigatorBooksSaveItem_Click(object sender, EventArgs e)
         {
-            // TODO: Methode "Speichern" implementieren!
-
+            // Save Table "Books".
+            this.Validate();
+            this.booksBindingSource.EndEdit();
+            this.tableAdapterManager.UpdateAll(this.libraryDataSet);
         }
 
         private void bindingNavigatorBooksPrint_Click(object sender, EventArgs e)
@@ -175,7 +229,10 @@ namespace Library
 
         private void bindingNavigatorAuthorsSaveItem_Click(object sender, EventArgs e)
         {
-            // TODO: Methode "Speichern" implementieren!
+            // Save Table "Authors".
+            this.Validate();
+            this.authorsBindingSource.EndEdit();
+            this.tableAdapterManager.UpdateAll(this.libraryDataSet);
 
         }
 
@@ -187,8 +244,10 @@ namespace Library
 
         private void bindingNavigatorPublishersSaveItem_Click(object sender, EventArgs e)
         {
-            // TODO: Methode "Speichern" implementieren!
-
+            // Save Table "Publishers".
+            this.Validate();
+            this.publishersBindingSource.EndEdit();
+            this.tableAdapterManager.UpdateAll(this.libraryDataSet);
         }
 
         private void bindingNavigatorPublishersPrint_Click(object sender, EventArgs e)
@@ -199,5 +258,6 @@ namespace Library
 
         // BLOCK: BINDING NAVIGATORS - ENDE
         // ################################################
+
     }
 }
